@@ -39,12 +39,15 @@ type StatusFilter = "all" | Status;
 
 const hoursUntil = (a: Appointment) => (new Date(toIsoInstant(a.date, a.time)).getTime() - Date.now()) / 3_600_000;
 
-function Stat({ label, value, sub }: { label: string; value: number | string; sub?: string }) {
+function Stat({ label, value, sub, icon: Icon, accent }: { label: string; value: number | string; sub?: string; icon: typeof AlertCircle; accent?: boolean }) {
   return (
-    <div className="rounded-2xl border border-line bg-surface px-4 py-3.5">
-      <p className="text-xs font-medium text-muted">{label}</p>
-      <p className="mt-1 font-display text-3xl text-ink">{value}</p>
-      {sub && <p className="text-xs text-muted">{sub}</p>}
+    <div className={cn("rounded-3xl px-5 py-4 shadow-soft", accent ? "bg-forest text-white" : "border border-line bg-surface")}>
+      <div className="flex items-center justify-between">
+        <p className={cn("text-xs font-semibold tracking-[0.14em] uppercase", accent ? "text-sage" : "text-muted")}>{label}</p>
+        <Icon className={cn("size-4", accent ? "text-sage" : "text-forest")} aria-hidden />
+      </div>
+      <p className={cn("mt-2 font-display text-4xl", accent ? "text-white" : "text-ink")}>{value}</p>
+      {sub && <p className={cn("mt-0.5 text-xs", accent ? "text-white/70" : "text-muted")}>{sub}</p>}
     </div>
   );
 }
@@ -305,7 +308,7 @@ export function Dashboard() {
       <main id="main" className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 md:py-8">
         <div>
           <p className="text-sm text-muted">{mounted ? formatDateLong(today) : " "}</p>
-          <h1 className="font-display text-3xl text-ink sm:text-4xl">
+          <h1 className="font-display text-4xl text-ink sm:text-5xl">
             Hello, {practice.nutritionist.split(" ").slice(0, 2).join(" ")}
           </h1>
         </div>
@@ -333,10 +336,11 @@ export function Dashboard() {
           </div>
         ) : (
           <section aria-label="Overview" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <Stat label="Today" value={stats.today} sub={`${stats.todayConfirmed} confirmed`} />
-            <Stat label="Upcoming" value={stats.upcoming} sub={`${stats.upcomingUnconfirmed} not confirmed`} />
-            <Stat label="Completed" value={stats.done} sub="consultations" />
+            <Stat accent icon={CalendarDays} label="Today" value={stats.today} sub={`${stats.todayConfirmed} confirmed`} />
+            <Stat icon={CircleDashed} label="Upcoming" value={stats.upcoming} sub={`${stats.upcomingUnconfirmed} not confirmed`} />
+            <Stat icon={CheckCircle2} label="Completed" value={stats.done} sub="consultations" />
             <Stat
+              icon={UserX}
               label="No-shows"
               value={stats.noShows}
               sub={stats.noShowRate === null ? "none recorded" : `${stats.noShowRate}% of past appointments`}

@@ -178,7 +178,8 @@ export function BookingFlow() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
+      <div className="min-w-0 space-y-6">
       <div>
         <h1 ref={headingRef} tabIndex={-1} className="font-display text-3xl text-ink outline-none sm:text-4xl">
           {step === 0 ? "When suits you?" : step === 1 ? "A little about you" : "Does this look right?"}
@@ -266,6 +267,23 @@ export function BookingFlow() {
           </div>
         </Card>
       )}
+      </div>
+      <aside className="hidden rounded-3xl border border-line bg-surface p-6 shadow-soft lg:sticky lg:top-24 lg:block" aria-label="Your booking so far">
+        <p className="text-xs font-semibold tracking-[0.18em] text-forest uppercase">Your booking</p>
+        <p className="mt-3 font-display text-2xl text-ink">
+          {slot?.time ? formatTime(slot.time) : "Pick a time"}
+        </p>
+        <p className="text-sm text-muted">{slot?.date ? formatDateLong(slot.date) : "Choose a day to see free times"}</p>
+        <dl className="mt-5 space-y-3 border-t border-line pt-5 text-sm">
+          <div className="flex justify-between gap-3"><dt className="text-muted">With</dt><dd className="text-right text-ink">{practice.nutritionist}</dd></div>
+          <div className="flex justify-between gap-3"><dt className="text-muted">Length</dt><dd className="text-ink">{practice.consultationMinutes} minutes</dd></div>
+          <div className="flex justify-between gap-3"><dt className="text-muted">Where</dt><dd className="text-right text-ink">{practice.name}, {practice.city}</dd></div>
+          {details && <div className="flex justify-between gap-3"><dt className="text-muted">For</dt><dd className="text-right text-ink">{details.name}</dd></div>}
+        </dl>
+        <p className="mt-5 rounded-2xl bg-sage-wash px-4 py-3 text-xs leading-relaxed text-forest-deep">
+          Free to move or cancel any time before your visit.
+        </p>
+      </aside>
     </div>
   );
 }
